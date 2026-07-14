@@ -64,6 +64,13 @@ xlnx_auto_*/
 # Editor / IDE files
 .vscode/
 
+# Root-level clutter outside the fpga_as_slave project
+/.py
+/chat.rapidgpt
+/self calibrating tdc/
+/vcredist_x64.exe
+/vcredist_x86.exe
+
 # Test files
 test.txt
 test2.txt
