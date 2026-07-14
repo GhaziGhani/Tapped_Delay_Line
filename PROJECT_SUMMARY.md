@@ -19,16 +19,4 @@ Important behavior & recent changes
 
 Build & test notes
 - Synthesis/build: use the provided Makefile and `scripts/build.sh` (ISE CLI) on a machine with ISE 14.7. On Windows, use the ISE toolchain; make targets: `make synth`, `make map`, `make par`, `make bitgen`.
-- Local checks: GHDL used for VHDL syntax checks in repository (no binary bitstream generation).
 
-How to push to GitHub (run these locally):
-  git remote add origin git@github.com:YOUR_USER/YOUR_REPO.git
-  git branch -M main
-  git push -u origin main
-
-Next steps I can do for you
-- Remove or relax overlapping AREA_GROUP constraints to fix routing and re-run MAP/PAR.
-- Create a README.md with more details or a LICENSE.
-- Help configure a GitHub repo and push (requires your credentials or a remote URL).
-
-Contact me which of the next steps you want me to take.
