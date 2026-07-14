@@ -1,0 +1,74 @@
+# Build outputs
+build/
+logs/
+matrix_runs/
+imported_repo/
+scripts/CONNECTED_DELAY_LINES/
+scripts/__pycache__/
+
+# Python cache and virtual environments
+__pycache__/
+.venv/
+*.pyc
+
+# Generated reports, plots, and data
+*.csv
+*.png
+*.vcd
+*.log
+*.wdb
+*.cf
+*.bld
+*.drc
+*.bgn
+*.ngr
+*.pad
+*.ptwx
+*.syr
+*.twx
+*.xds
+*.xreport
+*.xml
+*.html
+*.jou
+
+# Simulation output folders
+simulation/original/
+simulation/unsim/
+simulation/work/
+
+# ISE / FPGA build artifacts
+fpga_as_slave/FPGA_as_slave/
+*.bit
+*.bin
+*.ngc
+*.ncd
+*.par
+*.mrp
+*.unroutes
+*.map
+*.xst
+*.prj
+*.pcf
+*.xise
+*.gise
+*.lso
+*.xrpt
+*.xwbt
+
+# ISE temporary files
+xst/
+_xmsgs/
+xlnx_auto_*/
+
+# Editor / IDE files
+.vscode/
+
+# Test files
+test.txt
+test2.txt
+
+# Editor backups
+*~
+*.bak
+*.swp

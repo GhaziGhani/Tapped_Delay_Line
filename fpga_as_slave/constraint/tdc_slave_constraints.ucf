@@ -1,0 +1,69 @@
+################################################################################
+## tdc_slave_constraints.ucf - Hybrid Loop Slave Architecture
+################################################################################
+
+# Clock
+NET "CLK_IN" LOC = T8 | IOSTANDARD = "LVCMOS33";
+NET "CLK_IN" CLOCK_DEDICATED_ROUTE = FALSE;
+NET "CLK_IN" TNM_NET = "clk_in_grp";
+TIMESPEC TS_CLK_50 = PERIOD "clk_in_grp" 20 ns HIGH 50%;
+
+# UART 
+# Note: The previous sweeping design only used TX. As a slave, we need RX!
+NET "TX" LOC = D12 | IOSTANDARD = "LVCMOS33";
+# TODO: Update this placeholder with your exact board's UART RX pin
+NET "RX" LOC = C11 | IOSTANDARD = "LVCMOS33";
+
+# External async hit/pulse source for statistical calibration.
+# AX309 J3 pin 29 maps to FPGA pin C10 in the board UCF reference.
+NET "EXT_CAL_CLK" LOC = C10 | IOSTANDARD = "LVCMOS33";
+NET "EXT_CAL_CLK" PULLDOWN;
+
+# Reset
+NET "RST_IN" LOC = L3 | IOSTANDARD = "LVCMOS33";
+
+# LEDs
+NET "led<0>" LOC = P4 | IOSTANDARD = "LVCMOS33";
+NET "led<1>" LOC = N5 | IOSTANDARD = "LVCMOS33";
+NET "led<2>" LOC = P5 | IOSTANDARD = "LVCMOS33";
+NET "led<3>" LOC = M6 | IOSTANDARD = "LVCMOS33";
+
+# TDC async measurement paths.
+# Use instance-scoped names to avoid suppressing unrelated timing in other blocks.
+NET "inst_tapped_line/ro_clk" TIG;
+NET "EXT_CAL_CLK" TIG;
+NET "inst_tapped_line/U_TDC_FINE/carry_taps<*>" TIG;
+NET "inst_tapped_line/U_TDC_STOP/carry_taps<*>" TIG;
+
+# First capture layer is clocked by CLK_IN but samples asynchronous carry taps.
+NET "inst_tapped_line/U_TDC_FINE/thermo_cap1<*>" TIG;
+NET "inst_tapped_line/U_TDC_STOP/thermo_cap1<*>" TIG;
+
+
+INST "inst_tapped_line/U_TDC_FINE/GEN_CARRY4[0].GEN_CARRY4_FIRST.CARRY4_inst" LOC = SLICE_X8Y5;
+INST "inst_tapped_line/U_TDC_STOP/GEN_CARRY4[0].GEN_CARRY4_FIRST.CARRY4_inst" LOC = SLICE_X2Y5;
+
+INST "inst_tapped_line/U_TDC_FINE/GEN_CARRY4[0].GEN_CARRY4_FIRST.CARRY4_inst" AREA_GROUP = "TDC_FINE_CHAIN";
+INST "inst_tapped_line/U_TDC_FINE/GEN_CARRY4[*].GEN_CARRY4_NEXT.CARRY4_inst" AREA_GROUP = "TDC_FINE_CHAIN";
+# BEL/HBLKNM in RTL now glues FF_CAPTURE into the same slice as each CARRY4.
+# Keep the old CAP region constraint commented to avoid conflicting placement rules.
+#INST "inst_tapped_line/U_TDC_FINE/GEN_CAPTURE[*].FF_CAPTURE" AREA_GROUP = "TDC_FINE_CAP";
+INST "inst_tapped_line/U_TDC_FINE/GEN_CAPTURE[*].FF_META" AREA_GROUP = "TDC_FINE_META";
+
+INST "inst_tapped_line/U_TDC_STOP/GEN_CARRY4[0].GEN_CARRY4_FIRST.CARRY4_inst" AREA_GROUP = "TDC_STOP_CHAIN";
+INST "inst_tapped_line/U_TDC_STOP/GEN_CARRY4[*].GEN_CARRY4_NEXT.CARRY4_inst" AREA_GROUP = "TDC_STOP_CHAIN";
+#INST "inst_tapped_line/U_TDC_STOP/GEN_CAPTURE[*].FF_CAPTURE" AREA_GROUP = "TDC_STOP_CAP";
+INST "inst_tapped_line/U_TDC_STOP/GEN_CAPTURE[*].FF_META" AREA_GROUP = "TDC_STOP_META";
+
+INST "inst_tapped_line/GEN_FINE_T2B.U_T2B_FINE_START/*" AREA_GROUP = "TDC_T2B_START";
+
+AREA_GROUP "TDC_FINE_CHAIN" RANGE = SLICE_X8Y2:SLICE_X9Y61;
+AREA_GROUP "TDC_FINE_CAP" RANGE = SLICE_X10Y2:SLICE_X11Y61;
+AREA_GROUP "TDC_FINE_META" RANGE = SLICE_X12Y2:SLICE_X13Y61;
+
+AREA_GROUP "TDC_STOP_CHAIN" RANGE = SLICE_X2Y2:SLICE_X3Y61;
+AREA_GROUP "TDC_STOP_CAP" RANGE = SLICE_X4Y2:SLICE_X5Y61;
+AREA_GROUP "TDC_STOP_META" RANGE = SLICE_X6Y2:SLICE_X7Y61;
+
+AREA_GROUP "TDC_T2B_START" RANGE = SLICE_X22Y2:SLICE_X31Y61;
+

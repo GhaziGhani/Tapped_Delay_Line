@@ -1,0 +1,28 @@
+################################################################################
+## TDC_constraint.ucf - CLEANED
+################################################################################
+
+# Clock
+NET "CLK_IN" LOC = T8 | IOSTANDARD = "LVCMOS33";
+NET "CLK_IN" CLOCK_DEDICATED_ROUTE = FALSE;
+NET "CLK_IN" TNM_NET = "clk_in_grp";
+TIMESPEC TS_CLK_50 = PERIOD "clk_in_grp" 20 ns HIGH 50%;
+
+# UART
+NET "TX_OUT" LOC = D12 | IOSTANDARD = "LVCMOS33";
+
+# Reset
+NET "RST_IN" LOC = L3 | IOSTANDARD = "LVCMOS33";
+
+# LEDs
+NET "LOCKED"   LOC = M6 | IOSTANDARD = "LVCMOS33";
+NET "ALL_DONE" LOC = N5 | IOSTANDARD = "LVCMOS33";
+
+# TDC async paths - only nets that actually exist post-synthesis
+NET "*/delay_tap*" TIG;
+NET "*/toggle_edge_raw" TIG;
+NET "*/pulse_spike" TIG;
+NET "*/carry_taps*" TIG;
+
+# CARRY4 chain placement
+INST "U_TDC/U_TDC_FINE/GEN_CARRY4[*].CARRY4_inst" AREA_GROUP = "TDC_CHAIN";
